@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 mysql_config_file=mysql-client.cnf
 excluded_tables=$(<./excludedTables.txt)
+local_dump_dir=dumps
 
+location=$( cd "$(dirname "$0")" ; pwd -P )
+
+source ${location}/functions.sh
 
 function print_usage_and_exit() {
   echo "Usage: ${0} [-h] -d"
@@ -21,6 +25,10 @@ while [[ $# -ge 1 ]]; do
   case "$1" in
   -d | --database-name)
     database_name="$2"
+    shift
+    ;;
+  -l | --local-dump-dir)
+    local_dump_dir="$2"
     shift
     ;;
   -h | --help)
@@ -43,19 +51,26 @@ function create_ignore_table_list() {
 }
 
 
-echo "starting mysqldump"
+echoinfo "starting mysqldump"
 ignore_table_list=$( create_ignore_table_list "${database_name}" )
 
 mysqldump_command="mysqldump --defaults-extra-file=${mysql_config_file} --column-statistics=0 --no-tablespaces --single-transaction --default-character-set=utf8 --skip-set-charset"
-echo $mysqldump_command
 
 set -o errexit
 set -o pipefail
 
-
+if [[ ! -d "$local_dump_dir" ]]; then
+  mkdir "$local_dump_dir"
+fi
+if [[ ! -d "${local_dump_dir}/post" ]]; then
+  mkdir "${local_dump_dir}/post"
+fi
 ## one single dump-file, only usable for small databases
-${mysqldump_command} ${ignore_table_list} ${database_name} | sed -e 's/^\/\*\![0-9]* DEFINER=.*//' | sed "s/\`${database_name}\`\.//g" > dump.sql
+export LC_CTYPE=C
+export LANG=C
+${mysqldump_command} ${ignore_table_list} ${database_name} | sed -e 's/^\/\*\![0-9]* DEFINER=.*//' | sed "s/\`${database_name}\`\.//g" > ${local_dump_dir}/dump.sql
 
+generate_post_import_script ${mysql_config_file} ${database_name} ${local_dump_dir}
 
 
 ##  dump.sh --output dump.sql ; pure prosa: copy plz dump.sql to preview; import.sh --input dump.sql; update einspielen
