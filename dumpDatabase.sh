@@ -1,8 +1,34 @@
 #!/usr/bin/env bash
-database_name='basetables'
 mysql_config_file=mysql-client.cnf
 excluded_tables=$(<./excludedTables.txt)
 
+
+function print_usage_and_exit() {
+  echo "Usage: ${0} [-h] -d"
+  echo
+  echo "This script will update the database over the ac5 update scripts"
+  echo
+  echo "Available options:"
+  echo
+  echo "-h|--help                  print this help text and exit"
+  echo "-d|--destination-url url   the destination url for which the update should be executed"
+  echo
+  exit 0
+}
+
+[[ "$#" -lt 1 ]] && print_usage_and_exit
+while [[ $# -ge 1 ]]; do
+  case "$1" in
+  -d | --database-name)
+    database_name="$2"
+    shift
+    ;;
+  -h | --help)
+    print_usage_and_exit
+    ;;
+  esac
+  shift
+done
 
 function get_excluded_tables() {
     echo ${excluded_tables}
