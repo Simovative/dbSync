@@ -5,12 +5,11 @@ local_dump_dir=dumps
 
 location=$( cd "$(dirname "$0")" ; pwd -P )
 
-source ${location}/functions.sh
-
 function print_usage_and_exit() {
   echo "Usage: ${0} [-h] -d"
   echo
-  echo "This script will update the database over the ac5 update scripts"
+  echo "This script is part of the sync porcess,"
+  echo "it will create a dump of the source system"
   echo
   echo "Available options:"
   echo
@@ -51,7 +50,7 @@ function create_ignore_table_list() {
 }
 
 
-echoinfo "starting mysqldump"
+echo "starting mysqldump"
 ignore_table_list=$( create_ignore_table_list "${database_name}" )
 
 mysqldump_command="mysqldump --defaults-extra-file=${mysql_config_file} --column-statistics=0 --no-tablespaces --single-transaction --default-character-set=utf8 --skip-set-charset"
@@ -69,8 +68,3 @@ fi
 export LC_CTYPE=C
 export LANG=C
 ${mysqldump_command} ${ignore_table_list} ${database_name} | sed -e 's/^\/\*\![0-9]* DEFINER=.*//' | sed "s/\`${database_name}\`\.//g" > ${local_dump_dir}/dump.sql
-
-generate_post_import_script ${mysql_config_file} ${database_name} ${local_dump_dir}
-
-
-##  dump.sh --output dump.sql ; pure prosa: copy plz dump.sql to preview; import.sh --input dump.sql; update einspielen
