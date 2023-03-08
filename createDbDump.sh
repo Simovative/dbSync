@@ -61,9 +61,7 @@ set -o pipefail
 if [[ ! -d "$local_dump_dir" ]]; then
   mkdir "$local_dump_dir"
 fi
-if [[ ! -d "${local_dump_dir}/post" ]]; then
-  mkdir "${local_dump_dir}/post"
-fi
+
 ## one single dump-file, only usable for small databases
 export LC_CTYPE=C
 export LANG=C

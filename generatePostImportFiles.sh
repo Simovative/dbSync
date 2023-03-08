@@ -2,7 +2,12 @@
 mysql_config_file=mysql-client.cnf
 local_dump_dir=dumps
 
-function errxit() {
+
+function errcho() {
+  (echo >&2 "[ FAIL ] $@")
+}
+
+function errexit() {
   errcho "$@"
   exit 1
 }
@@ -18,6 +23,12 @@ function generate_post_import_script() {
   local db_name=$1
   shift
   local local_dump_dir=$1
+  if [[ ! -d "$local_dump_dir" ]]; then
+   mkdir "$local_dump_dir"
+  fi
+  if [[ ! -d "${local_dump_dir}/post" ]]; then
+    mkdir "${local_dump_dir}/post"
+  fi
   rm -f ${local_dump_dir}/post/autogen_cms_domains.sql
   mysql --defaults-extra-file=${mysql_config_file} ${db_name} -e "SELECT id, domain FROM cms_domains;" | tail -n +2 | while read pk domain; do
     echo "UPDATE    cms_domains
