@@ -61,14 +61,15 @@ function generate_post_import_script() {
 function print_usage_and_exit() {
   echo "Usage: ${0} [-h] -d"
   echo
-  echo "This script is part of the sync porcess,"
+  echo "This script is part of the sync process,"
   echo "it will create post import scripts from the destination system"
+  echo "and make sure all tables(except excluded) will be dropped before the dump is applied"
   echo
   echo "Available options:"
   echo
   echo "-h|--help                  print this help text and exit"
   echo "-d|--database-name         the name of the database from the destination system"
-  echo "-l|--local_dump_dir        the dump directory where the saved domains will be stored"
+  echo "-l|--local_dump_dir        the dump directory where the saved domains will be stored and the dump you will apply"
   echo
   exit 0
 }
