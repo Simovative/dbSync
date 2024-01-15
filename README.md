@@ -8,13 +8,20 @@ First you have to create the dump from the source database
 ```
 Now move the resulting dumpfile to wherever you can reach your destination database from.
 
-Next you have to generate the Post-Import Script from the destination database.
-To work properly, this script needs to be in the same directory as the directory containing the dump:
-/tmp/dump/dump.sql
-/tmp/generatePostImportFiles.sh
+Next you have to generate the Post-Import Script from the destination database and the drop table queries for the tables you dumped.
+To work properly, your dump from the source system needs to be on the server as well.
+The files generateDropTablesQueries.sh, generatePostImportFiles.sh, generateStuffFromDestination.sh, and excludedTables.txt
+need to be on the destination system in the same directory.
+
 ```bash
-./generatePostImportFiles.sh -d acfive_preview -l dumps
+./generateStuffFromDestination.sh -d acfive_preview -l dumps
 ```
+This will execute the files generateDropTablesQueries.sh and generatePostImportFiles.sh
+
+generateDropTablesQueries will go over all tables of the destination database and generate "DROP TABLE"-queries if they are not in excludedTables.txt,
+then append these to the top of your dump. This is to avoid potential errors with migration scripts executed after the dump has been applied.
+
+generatePostImportFiles will save the domainnames of your community, application, and OAS-domains to fix them after the dump has been applied.
 
 The resulting structure will look something like this:
 /tmp/dump/dump.sql

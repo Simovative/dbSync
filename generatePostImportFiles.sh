@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 mysql_config_file=mysql-client.cnf
-local_dump_dir=dumps
-excluded_tables=$(<./excludedTables.txt)
-
 
 function errcho() {
   (echo >&2 "[ FAIL ] $@")
@@ -17,28 +14,6 @@ function echok() {
   echo "[  OK  ] $@"
 }
 
-function get_excluded_tables() {
-    echo ${excluded_tables}
-}
-
-# drop all tables except excluded ones
-function generate_delete_all_tables() {
-  [[ "$#" -lt 2 ]] && errxit "Not enough parameter provided."
-  local mysql_config_file=$1
-  shift
-  local db_name=$1
-
-  all_tables=$(mysql --defaults-extra-file=${mysql_config_file} -e "SHOW TABLES;" ${database_name} | tail -n +2)
-  drop_queries=""
-  excluded_tables=$(get_excluded_tables)
-
-  for table in $all_tables; do
-    if [[ ! " $excluded_tables " =~ ${table} ]]; then
-        drop_queries+="DROP TABLE IF EXISTS $table; "
-    fi
-  done
-  sed -i "1s/^/$drop_queries\n/" "${local_dump_dir}/dump.sql"
-}
 
 function generate_post_import_script() {
   [[ "$#" -lt 3 ]] && errxit "Not enough parameter provided."
@@ -87,13 +62,12 @@ function print_usage_and_exit() {
   echo
   echo "This script is part of the sync process,"
   echo "it will create post import scripts from the destination system"
-  echo "and make sure all tables(except excluded) will be dropped before the dump is applied"
   echo
   echo "Available options:"
   echo
   echo "-h|--help                  print this help text and exit"
   echo "-d|--database-name         the name of the database from the destination system"
-  echo "-l|--local_dump_dir        the dump directory where the saved domains will be stored and the dump you will apply"
+  echo "-l|--local_dump_dir        the directory in which the dump from the source database lies"
   echo
   exit 0
 }
@@ -115,7 +89,5 @@ while [[ $# -ge 1 ]]; do
   esac
   shift
 done
-
-generate_delete_all_tables ${mysql_config_file} ${database_name}
 
 generate_post_import_script ${mysql_config_file} ${database_name} ${local_dump_dir}
