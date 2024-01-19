@@ -10,11 +10,11 @@ Now move the resulting dumpfile to wherever you can reach your destination datab
 
 Next you have to generate the Post-Import Script from the destination database and the drop table queries for the tables you dumped.
 To work properly, your dump from the source system needs to be on the server as well.
-The files generateDropTablesQueries.sh, generatePostImportFiles.sh, generateStuffFromDestination.sh, and excludedTables.txt
+The files generateDropTablesQueries.sh, generatePostImportFiles.sh, preDatabaseSync.sh, and excludedTables.txt
 need to be on the destination system in the same directory.
 
 ```bash
-./generateStuffFromDestination.sh -d acfive_preview -l dumps
+./preDatabaseSync.sh -d acfive_preview -l dumps
 ```
 This will execute the files generateDropTablesQueries.sh and generatePostImportFiles.sh
 
