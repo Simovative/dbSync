@@ -12,7 +12,7 @@ function print_usage_and_exit() {
   echo "-d|--database-name         the name of the database from the destination system"
   echo "-l|--local_dump_dir        the directory in which the dump from the source database lies"
   echo
-  exit 0
+  exit 0ll
 }
 
 
@@ -35,6 +35,6 @@ while [[ $# -ge 1 ]]; do
 done
 
 
-./generateDropTablesQueries.sh ${database_name} ${local_dump_dir}
+./generateDropTablesQueries.sh -d ${database_name} -l ${local_dump_dir}
 
-./generatePostImportFiles.sh ${database_name} ${local_dump_dir}
+./generatePostImportFiles.sh -d ${database_name} -l ${local_dump_dir}

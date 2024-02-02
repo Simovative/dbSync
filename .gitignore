@@ -1,2 +1,3 @@
 excludedTables.txt
-mysql-client.cnf
+mysql-client-source.cnf
+mysql-client-target.cnf
