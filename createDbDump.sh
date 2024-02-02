@@ -8,7 +8,7 @@ location=$( cd "$(dirname "$0")" ; pwd -P )
 function print_usage_and_exit() {
   echo "Usage: ${0} [-h] -d"
   echo
-  echo "This script is part of the sync porcess,"
+  echo "This script is part of the sync process,"
   echo "it will create a dump of the source system"
   echo
   echo "Available options:"

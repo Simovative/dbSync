@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 mysql_config_file=mysql-client.cnf
-local_dump_dir=dumps
-
 
 function errcho() {
   (echo >&2 "[ FAIL ] $@")
@@ -15,6 +13,7 @@ function errexit() {
 function echok() {
   echo "[  OK  ] $@"
 }
+
 
 function generate_post_import_script() {
   [[ "$#" -lt 3 ]] && errxit "Not enough parameter provided."
@@ -61,14 +60,14 @@ function generate_post_import_script() {
 function print_usage_and_exit() {
   echo "Usage: ${0} [-h] -d"
   echo
-  echo "This script is part of the sync porcess,"
+  echo "This script is part of the sync process,"
   echo "it will create post import scripts from the destination system"
   echo
   echo "Available options:"
   echo
   echo "-h|--help                  print this help text and exit"
   echo "-d|--database-name         the name of the database from the destination system"
-  echo "-l|--local_dump_dir        the dump directory where the saved domains will be stored"
+  echo "-l|--local_dump_dir        the directory in which the dump from the source database lies"
   echo
   exit 0
 }
@@ -90,6 +89,5 @@ while [[ $# -ge 1 ]]; do
   esac
   shift
 done
-
 
 generate_post_import_script ${mysql_config_file} ${database_name} ${local_dump_dir}
