@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-mysql_config_file=mysql-client.cnf
+mysql_config_file=mysql-client-target.cnf
 excluded_tables=$(<./excludedTables.txt)
 
 
@@ -42,9 +42,11 @@ function generate_delete_all_tables() {
   local mysql_config_file=$1
   shift
   local database_name=$1
+  shift
+  local local_dump_dir=$1
 
   all_tables=$(mysql --defaults-extra-file=${mysql_config_file} -e "SHOW TABLES;" ${database_name} | tail -n +2)
-  drop_queries=""
+  drop_queries="SET FOREIGN_KEY_CHECKS=0; "
   excluded_tables=$(get_excluded_tables)
 
   for table in $all_tables; do
@@ -52,6 +54,7 @@ function generate_delete_all_tables() {
         drop_queries+="DROP TABLE IF EXISTS $table; "
     fi
   done
+  drop_queries+="SET FOREIGN_KEY_CHECKS=1;"
   sed -i "1s/^/$drop_queries\n/" "${local_dump_dir}/dump.sql"
 }
 
@@ -73,4 +76,4 @@ while [[ $# -ge 1 ]]; do
   shift
 done
 
-generate_post_import_script ${mysql_config_file} ${database_name} ${local_dump_dir}
+generate_delete_all_tables ${mysql_config_file} ${database_name} ${local_dump_dir}

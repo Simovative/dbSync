@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-mysql_config_file=mysql-client.cnf
+mysql_config_file=mysql-client-source.cnf
 excluded_tables=$(<./excludedTables.txt)
 local_dump_dir=dumps
 
@@ -14,7 +14,8 @@ function print_usage_and_exit() {
   echo "Available options:"
   echo
   echo "-h|--help                  print this help text and exit"
-  echo "-d|--destination-url url   the destination url for which the update should be executed"
+  echo "-d|--database_name         the name of the database from the source system"
+  echo "-l|--local_dump_dir        the directory in which the dump from the source database should be put"
   echo
   exit 0
 }

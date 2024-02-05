@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-mysql_config_file=mysql-client.cnf
+mysql_config_file=mysql-client-target.cnf
 
 function errcho() {
   (echo >&2 "[ FAIL ] $@")
@@ -16,7 +16,7 @@ function echok() {
 
 
 function generate_post_import_script() {
-  [[ "$#" -lt 3 ]] && errxit "Not enough parameter provided."
+  [[ "$#" -lt 3 ]] && errexit "Not enough parameter provided."
   local mysql_config_file=$1
   shift
   local db_name=$1
