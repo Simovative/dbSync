@@ -54,7 +54,7 @@ echo "start importing main dump file"
 
 echo "done importing main dump file, now starting to import post import files"
 set +e
-count=$(ls -1 "${local_dump_dir}/post/*.sql" 2>/dev/null | wc -l)
+count=$(ls -1 ${local_dump_dir}/post/*.sql 2>/dev/null | wc -l)
 set -e
 if [ "$count" != "0" ]
 then
