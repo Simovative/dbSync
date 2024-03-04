@@ -51,7 +51,7 @@ export LC_CTYPE=C
 export LANG=C
 echo "Marking start of data_sync in binlog"
 data_sync_log_id=$(${mysqlimport_command} ${database_name} \
-  -e "INSERT INTO data_syncs_log (started_at, ended_at, status, message) VALUES (NOW(), '0000-00-00 00:00:00', 'STARTED', 'DATA_SYNC_LOG');
+  -e "INSERT INTO data_sync_log (started_at, ended_at, status, message) VALUES (NOW(), '0000-00-00 00:00:00', 'STARTED', 'DATA_SYNC_LOG');
      SELECT LAST_INSERT_ID();" | awk '{ print $1}' | grep -v '^LAST_INSERT_ID')
 
 # comment out if you want to depend on data_sync appearing in binlog
@@ -87,11 +87,11 @@ echo 'done importing post import files'
 if [[ -f "failed_files" ]]; then
     echo "$(pwd)/failed_files exists. Something went wrong please check failed_files and handle appropriate, and then continue with the process"
     echo "marking data_sync_log as failed"
-    mysql --defaults-extra-file=${mysql_config} ${dbname} -e "UPDATE data_syncs_log SET ended_at = NOW(), status = 'FINISHED_FAILED' where id = ${data_sync_log_id};"
+    mysql --defaults-extra-file=${mysql_config} ${dbname} -e "UPDATE data_sync_log SET ended_at = NOW(), status = 'FINISHED_FAILED' where id = ${data_sync_log_id};"
     exit 1
 else
     echo "marking data_sync_log as success"
-    mysql --defaults-extra-file=${mysql_config} ${dbname} -e "UPDATE data_syncs_log SET ended_at = NOW(), status = 'FINISHED_SUCCESS' where id = ${data_sync_log_id};"
+    mysql --defaults-extra-file=${mysql_config} ${dbname} -e "UPDATE data_sync_log SET ended_at = NOW(), status = 'FINISHED_SUCCESS' where id = ${data_sync_log_id};"
     # comment out if you want to depend on data_sync appearing in binlog
     #[ $? -ne 0 ] && echo "FAIL: could not mark data_sync_log as finished. Stopping process." && exit 1
     exit 0
