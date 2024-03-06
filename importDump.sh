@@ -61,7 +61,7 @@ data_sync_log_id=$(${mysqlimport_command} ${database_name} \
 #fi
 
 echo "start importing main dump file"
-#${mysqlimport_command} ${database_name} < ${local_dump_dir}/dump.sql
+${mysqlimport_command} ${database_name} < ${local_dump_dir}/dump.sql
 
 echo "done importing main dump file, now starting to import post import files"
 set +e
