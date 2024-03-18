@@ -51,7 +51,7 @@ function generate_delete_all_tables() {
 
   for table in $all_tables; do
     if [[ ! " $excluded_tables " =~ ${table} ]]; then
-        drop_queries+="DROP TABLE IF EXISTS $table; "
+        drop_queries+="DROP TABLE IF EXISTS \`$table\`; "
     fi
   done
   drop_queries+="SET FOREIGN_KEY_CHECKS=1;"
