@@ -54,7 +54,13 @@ function create_ignore_table_list() {
 echo "starting mysqldump"
 ignore_table_list=$( create_ignore_table_list "${database_name}" )
 
-mysqldump_command="mysqldump --defaults-extra-file=${mysql_config_file} --column-statistics=0 --no-tablespaces --single-transaction --default-character-set=utf8 --skip-set-charset"
+
+columnStatistics="--column-statistics=0"
+if mysqldump --version | grep MariaDB 1>/dev/null; then
+  columnStatistics=""
+fi
+
+mysqldump_command="mysqldump --defaults-extra-file=${mysql_config_file} ${columnStatistics} --no-tablespaces --single-transaction --default-character-set=utf8 --skip-set-charset"
 
 set -o errexit
 set -o pipefail
