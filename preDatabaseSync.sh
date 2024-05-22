@@ -12,7 +12,7 @@ function print_usage_and_exit() {
   echo "-d|--database-name         the name of the database from the destination system"
   echo "-l|--local_dump_dir        the directory in which the dump from the source database lies"
   echo
-  exit 0ll
+  exit 0
 }
 
 
