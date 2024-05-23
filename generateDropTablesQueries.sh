@@ -58,6 +58,10 @@ function generate_delete_all_tables() {
   sed -i "1s/^/$drop_queries\n/" "${local_dump_dir}/dump.sql"
 }
 
+if [[ -n "$excluded_tables" || "$excluded_tables" == "" ]]; then
+    errxit "No excluded tables provided, exiting"
+fi
+
 [[ "$#" -lt 1 ]] && print_usage_and_exit
 while [[ $# -ge 1 ]]; do
   case "$1" in
