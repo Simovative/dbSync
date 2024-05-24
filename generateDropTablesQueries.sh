@@ -59,7 +59,7 @@ function generate_delete_all_tables() {
 }
 
 if [[ -n "$excluded_tables" || "$excluded_tables" == "" ]]; then
-    errxit "No excluded tables provided, exiting"
+    errexit "No excluded tables provided, exiting"
 fi
 
 [[ "$#" -lt 1 ]] && print_usage_and_exit
