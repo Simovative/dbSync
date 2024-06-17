@@ -23,7 +23,6 @@ if [ -z "$SOURCE_CONFIG" ] || [ -z "$DEST_CONFIG" ] || [ -z "$IDENTIFIER" ]; the
 fi
 
 TMP_DIR=$(mktemp -d)
-mkdir -p "${TMP_DIR}/documenttemplates"
 
 cleanup() {
     echo "Removing temporary directory"
@@ -36,14 +35,14 @@ trap cleanup EXIT
 BUCKET_PREFIX="ac5bucket/${IDENTIFIER}"
 
 echo "Copying document templates to temporary directory..."
-s3cmd -r -c "$SOURCE_CONFIG" get s3://"${BUCKET_PREFIX}/documenttemplates" "${TMP_DIR}/documenttemplates"
+s3cmd -r -c "$SOURCE_CONFIG" get s3://"${BUCKET_PREFIX}/documenttemplates" "${TMP_DIR}/"
 if [ $? -ne 0 ]; then
     echo "Error copying document templates from source bucket to temporary directory."
     exit 1
 fi
 
 echo "Copying document templates to destination bucket..."
-s3cmd -r -c "$DEST_CONFIG" put "${TMP_DIR}/documenttemplates" s3://"${BUCKET_PREFIX}/documenttemplates/"
+s3cmd -r --delete-removed -c "$DEST_CONFIG" sync "${TMP_DIR}/documenttemplates" s3://"${BUCKET_PREFIX}/"
 if [ $? -ne 0 ]; then
     echo "Error copying document templates from temporary directory to destination bucket."
     exit 1
