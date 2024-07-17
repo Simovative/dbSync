@@ -21,7 +21,7 @@ This will execute the files generateDropTablesQueries.sh and generatePostImportF
 generateDropTablesQueries will go over all tables of the destination database and generate "DROP TABLE"-queries if they are not in excludedTables.txt,
 then append these to the top of your dump. This is to avoid potential errors with migration scripts executed after the dump has been applied.
 
-generatePostImportFiles will save the domainnames of your community, application, and OAS-domains to fix them after the dump has been applied.
+generatePostImportFiles will save the domain-names of your community, application, and OAS-domains to fix them after the dump has been applied.
 
 The resulting structure will look something like this:
 /tmp/dump/dump.sql
