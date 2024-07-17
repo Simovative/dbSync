@@ -29,11 +29,11 @@ function generate_post_import_script() {
     mkdir "${local_dump_dir}/post"
   fi
   rm -f ${local_dump_dir}/post/autogen_cms_domains.sql
-  mysql --defaults-extra-file=${mysql_config_file} ${db_name} -e "SELECT id, domain FROM cms_domains;" | tail -n +2 | while read pk domain; do
+  mysql --defaults-extra-file=${mysql_config_file} ${db_name} -e "SELECT id, domain, larissa_lib, dir_publish FROM cms_domains;" | tail -n +2 | while read pk domain larissa_lib dir_publish; do
     echo "UPDATE    cms_domains
           SET       domain = '${domain}',
-                    larissa_lib = '/srv/a5_source/httpdocs/lib/',
-                    dir_publish='/dev/null'
+                    larissa_lib = '${larissa_lib}',
+                    dir_publish = '${dir_publish}'
           WHERE     id = ${pk};" >>${local_dump_dir}/post/autogen_cms_domains.sql
     echo "UPDATE      cms_domains
           INNER JOIN  cms_community
