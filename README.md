@@ -10,7 +10,7 @@ Now move the resulting dumpfile to wherever you can reach your destination datab
 
 Next you have to generate the Post-Import Script from the destination database and the drop table queries for the tables you dumped.
 To work properly, your dump from the source system needs to be on the server as well.
-The files generateDropTablesQueries.sh, generatePostImportFiles.sh, preDatabaseSync.sh, and excludedTables.txt
+The files generateDropTablesQueries.sh, generatePostImportFiles.sh, preDatabaseSync.sh, and excludedTables.txt, copyDocumentTemplates.sh
 need to be on the destination system in the same directory.
 
 ```bash
@@ -21,7 +21,7 @@ This will execute the files generateDropTablesQueries.sh and generatePostImportF
 generateDropTablesQueries will go over all tables of the destination database and generate "DROP TABLE"-queries if they are not in excludedTables.txt,
 then append these to the top of your dump. This is to avoid potential errors with migration scripts executed after the dump has been applied.
 
-generatePostImportFiles will save the domainnames of your community, application, and OAS-domains to fix them after the dump has been applied.
+generatePostImportFiles will save the domain-names of your community, application, and OAS-domains to fix them after the dump has been applied.
 
 The resulting structure will look something like this:
 /tmp/dump/dump.sql
