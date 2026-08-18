@@ -60,7 +60,7 @@ if mysqldump --version | grep MariaDB 1>/dev/null; then
   columnStatistics=""
 fi
 
-mysqldump_command="mysqldump --defaults-extra-file=${mysql_config_file} ${columnStatistics} --no-tablespaces --single-transaction --default-character-set=utf8 --skip-set-charset"
+mysqldump_command="mysqldump --defaults-extra-file=${mysql_config_file} ${columnStatistics} --no-tablespaces --single-transaction --default-character-set=utf8mb4 --skip-set-charset"
 
 set -o errexit
 set -o pipefail

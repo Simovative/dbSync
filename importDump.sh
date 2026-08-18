@@ -37,7 +37,7 @@ while [[ $# -ge 1 ]]; do
   shift
 done
 
-mysqlimport_command="mysql --defaults-extra-file=${mysql_config_file} --default-character-set=utf8"
+mysqlimport_command="mysql --defaults-extra-file=${mysql_config_file} --default-character-set=utf8mb4"
 
 set -o errexit
 set -o pipefail
